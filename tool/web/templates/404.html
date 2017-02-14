@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html class="uk-height-1-1">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge;">
+        <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+        <title>Maintenance Tool</title>
+        <link rel="icon" href="/static/favicon.ico">
+        <link rel="stylesheet" href="/static/css/uikit.gradient.min.css">
+        <link rel="stylesheet" href="/static/css/base.css">
+    </head>
+    <body class="uk-height-1-1">
+        <div id="particles-js" style="position: absolute; width: 100%; height: 100%; z-index: -1;"></div>
+        <div class="uk-grid uk-height-1-1">
+            <div class="uk-width-1-2 uk-container-center uk-vertical-align">
+                <div class="uk-vertical-align-middle">
+                    <h1>Amazing!</h1>
+                    <h2 style="margin:0 0 50px;">You found a new world, do not tell anyone else!</h2>
+                    <a class="uk-button uk-button-primary" href="/" >BACK TO HOME</a>
+                </div>
+            </div>
+        </div>
+
+        <script type="text/javascript" src="/static/js/jquery.min.js"></script>
+        <script type="text/javascript" src="/static/js/particles.min.js"></script>
+        <script type="text/javascript">
+            $(document).ready(function() {
+                particlesJS("particles-js", {
+                    "particles": {
+                        "number": {
+                            "value": 5,
+                            "density": {
+                                "enable": true,
+                                "value_area": 150
+                            }
+                        },
+                            "color": {
+                            "value": "#666"
+                        },
+                            "shape": {
+                            "type": "circle",
+                            "stroke": {
+                                "width": 0
+                            }
+                        },
+                            "opacity": {
+                            "value": 0.5,
+                            "random": false,
+                            "anim": {
+                                "enable": false
+                            }
+                        },
+                            "size": {
+                            "value": 10,
+                            "random": true,
+                            "anim": {
+                                "enable": false
+                            }
+                        },
+                        "line_linked": {
+                            "enable": true,
+                            "distance": 300,
+                            "color": "#666",
+                            "opacity": 0.5,
+                            "width": 1
+                        },
+                        "move": {
+                            "enable": true,
+                            "speed": 3,
+                            "direction": "none",
+                            "random": false,
+                            "straight": false,
+                            "out_mode": "bounce",
+                            "bounce": false,
+                            "attract": {
+                                "enable": true,
+                                "rotateX": 1200,
+                                "rotateY": 1200
+                            }
+                        }
+                    },
+                    "interactivity": {
+                        "detect_on": "canvas",
+                        "events": {
+                            "onhover": {
+                                "enable": false
+                            },
+                            "onclick": {
+                                "enable": false
+                            },
+                            "resize": true
+                        },
+                    },
+                    "retina_detect": true
+                });
+            }); 
+        </script>
+
+    </body>
+</html>

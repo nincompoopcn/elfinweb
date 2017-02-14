@@ -1,0 +1,87 @@
+<div class="uk-grid">
+    <div class="uk-width-1-1"> 
+        <form class="uk-form">
+            <select class="uk-width-1-10 selectpicker" multiple data-none-selected-text="Select Cat" name="category" id="input-category">
+                {% for category in categories %}
+                <option {% if category.c_id in input.category %} selected {% endif %} value="{{ category.c_id }}">{{ category.c_name }}</option>
+                {% endfor %}
+            </select>
+            <input type="text" class="uk-width-1-10" name="pronto" id="input-pronto" placeholder="PR" value="{{ input.pronto }}">
+            <input type="text" class="uk-width-1-10" name="monsho" id="input-monsho" placeholder="Monsho" value="{{ input.monsho }}">
+            <input type="text" class="uk-width-2-10" name="title" id="input-title" placeholder="Title" value="{{ input.title }}">
+            <input type="text" class="uk-width-1-10" name="person" id="input-person" placeholder="Resp Person" value="{{ input.person }}">
+            <select class="uk-width-1-10 selectpicker" multiple data-none-selected-text="Select State" name="state" id="input-state">
+                {% for state in states %}
+                <option {% if state.s_id in input.state %} selected {% endif %} value="{{ state.s_id }}">{{ state.s_name }}</option>
+                {% endfor %}
+            </select>
+            <select class="uk-width-1-10 selectpicker" multiple data-none-selected-text="Select Team" name="team" id="input-team">
+                {% for team in teams %}
+                <option {% if team.t_id in input.team %} selected {% endif %} value="{{ team.t_id }}">{{ team.t_name }}</option>
+                {% endfor %}
+            </select>
+            <button type="submit" class="uk-button uk-button-primary">Search</button>
+        </form>
+    </div>
+</div>
+<hr class="uk-grid-divider">
+<div class="uk-grid">
+    <div class="uk-width-1-1">
+        <div class="uk-overflow-container">
+            <table class="uk-table uk-table-hover uk-table-striped">
+                <thead>
+                    <th style="width:5%;">Cat</th>
+                    <th>PR</th>
+                    <th>Monsho</th>
+                    <th style="width:40%;">Title</th>
+                    <th>Rel</th>
+                    <th style="width:8%;">Resp Person</th>
+                    <th style="width:5%;">In Date</th>
+                    <th style="width:5%;">Out Date</th>
+                    <th style="width:2%;">Days</th>
+                    <th>State</th>
+                    <th>Team</th>
+                    <th>PR Group</th>
+                    <th>Area</th>
+                    {% if session.UID %}
+                    <th>Op</th>
+                    {% endif %}
+                </thead>
+                <tbody>
+                    {% for issue in issues %}
+                    <tr data-i_id="{{ issue.i_id }}">
+                        <td>{{ issue.category }}</td>
+                        <td>{{ issue.pronto }}</td>
+                        <td>{{ issue.monsho }}</td>
+                        <td>{{ issue.title }}</td>
+                        <td>{{ issue.release }}</td>
+                        <td>{{ issue.person }}</td>
+                        <td>{{ issue.in_date }}</td>
+                        <td>{{ issue.out_date }}</td>
+                        {% if issue.out_date %}
+                        <td>{{ get_date_delta(issue.out_date, issue.in_date) }}</td>
+                        {% else %}
+                        <td>{{ get_date_delta(today, issue.in_date) }}</td>
+                        {% endif %}
+                        <td>{{ issue.state }}</td>
+                        <td>{{ issue.team }}</td>
+                        <td>{{ issue.group }}</td>
+                        <td>{{ issue.area }}</td>
+                        {% if session.UID %}
+                        <td>
+                            <a href="#" class="uk-icon-small uk-icon-hover uk-icon-info"></a>
+                            <a href="#" class="uk-icon-small uk-icon-hover uk-icon-remove"></a>
+                        </td>
+                        {% endif %}
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+<div class="uk-grid">
+    <div class="uk-width-1-1">
+        {% include 'pagination.html' %}
+    </div>
+</div>

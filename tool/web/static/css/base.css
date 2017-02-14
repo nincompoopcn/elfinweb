@@ -1,0 +1,70 @@
+@font-face {
+    font-family: 'Proxima Nova';
+    src: url('../fonts/proximanova-light-webfont.eot');
+    src: url('../fonts/proximanova-light-webfont.eot?#iefix') format('embedded-opentype'),
+        url('../fonts/proximanova-light-webfont.woff') format('woff'),
+        url('../fonts/proximanova-light-webfont.ttf') format('truetype'),
+        url('../fonts/proximanova-light-webfont.svg#ProximaNovaLight') format('svg');
+    font-weight: 300;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Proxima Nova';
+    src: url('../fonts/proximanova-reg-webfont.eot');
+    src: url('../fonts/proximanova-reg-webfont.eot?#iefix') format('embedded-opentype'),
+        url('../fonts/proximanova-reg-webfont.woff') format('woff'),
+        url('../fonts/proximanova-reg-webfont.ttf') format('truetype'),
+        url('../fonts/proximanova-reg-webfont.svg#ProximaNovaReg') format('svg');
+    font-weight: 400;
+    font-style: normal;
+}
+
+body, h1, h2, h3, h4, h5, h6,
+.uk-navbar-nav > li > a { font-family: "Proxima Nova", "Helvetica Neue", Helvetica, Arial, sans-serif; }
+
+table {
+    font-size: 12px;
+}
+
+.uk-margin {
+    margin-bottom: 0;
+}
+
+.uk-fadeout {
+    z-index: 50;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 50px;
+    background: -webkit-gradient(linear, left top, left bottom, from(rgba(255, 255, 255, 255)), to(rgba(255, 255, 255, 0)));
+}
+
+.uk-container {
+    padding-top: 25px;
+    max-width: 100%;
+}
+
+.uk-footer {
+    margin: 25px 0;
+    padding: 25px 0;
+}
+
+.uk-autocomplete .uk-dropdown {
+    width: 50%;
+    padding: 5px 15px;
+}
+
+.uk-form-icon.uk-right > [class*=uk-icon-] {
+    right: 0;
+}
+
+.uk-form-icon.uk-right:not(.uk-form-icon-flip)>input {
+    padding-left: 6px!important;
+    padding-right: 30px!important;
+}
+
+.uk-form-icon > .uk-icon-hover {
+    pointer-events: auto!important;
+}

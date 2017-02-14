@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge;">
+        <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+        <title>Maintenance Tool</title>
+        <link rel="icon" href="/static/favicon.ico">
+        <link rel="stylesheet" href="/static/css/uikit.gradient.min.css">
+        <link rel="stylesheet" href="/static/css/sticky.gradient.min.css">
+        <link rel="stylesheet" href="/static/css/notify.gradient.min.css">
+        <link rel="stylesheet" href="/static/css/autocomplete.gradient.min.css">
+        <link rel="stylesheet" href="/static/css/datepicker.gradient.min.css">
+        <link rel="stylesheet" href="/static/css/accordion.gradient.min.css">
+        <link rel="stylesheet" href="/static/css/form-advanced.gradient.min.css">
+        <link rel="stylesheet" href="/static/css/tooltip.gradient.min.css">
+
+        {% block css %}
+        {% endblock css %}
+
+        <link rel="stylesheet" href="/static/css/base.css">
+
+    </head>
+    <body>
+        <div class="uk-container uk-container-center">
+            <div class="uk-grid">
+                <div class="uk-width-1-1">
+                    <div class='uk-fadeout'></div>
+                    <nav class="uk-navbar" data-uk-sticky="{top:25}">
+                        <a href="/" class="uk-navbar-brand">Maintenance Tool</a>
+                        <ul class="uk-navbar-nav">
+                            <li><a href="/">Issues</a></li>
+                            <li><a href="/metric/">Metrics</a></li>
+                            <li><a href="/helper/">Helpers</a></li>
+                        </ul>
+                        <div class="uk-navbar-flip">
+                            <ul class="uk-navbar-nav">
+                                {% if session.UID %}
+                                <li><a href="#">{{ session.UID }}</a></li>
+                                {% if g.privilege > 0 %}
+                                <li><a href="/admin/">Admin</a></li>
+                                {% endif %}
+                                <li><a href="/logout/">Sign Out</a></li>
+                                {% else %}
+                                <li><a href="/login/">Sign In</a></li>
+                                {% endif %}
+                            </ul>
+                        </div>
+                    </nav>
+                </div>
+            </div>
+
+            {% block body %}
+            {% endblock body %}
+
+        </div>
+
+        <div class="uk-container uk-container-center uk-text-center">
+            <div class="uk-navbar uk-footer">
+                <ul class="uk-subnav uk-subnav-line uk-flex-center">
+                    <li><a href="mailto:zhongtian.li@nokia.com,joe.zheng@nokia.com?subject=%5BMT%5D%5BBUG%5D%20I%20found%20a%20bug%2C%20please%20help%20to%20check.">Bug</a></li>
+                    <li><a href="mailto:zhongtian.li@nokia.com,joe.zheng@nokia.com?subject=%5BMT%5D%5BNF%5D%20I%20love%20your%20tool%2C%20but%20could%20you%20please%20add%20an%20new%20feature%3F">Feature</a></li>
+                    <li><a href="#">Option 3</a></li>
+                    <li><a href="#">Option 4</a></li>
+                </ul>
+
+                <div class="uk-panel">
+                    <p>Powered by <a href="mailto:zhongtian.li@nokia.com">Zhongtian</a> and <a href="mailto:joe.zheng@nokia.com">Joe</a> with love.
+                        <br>Copyright © 2016 <a href="http://www.nokia.com/" target="_blank">NOKIA</a>
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <script type="text/javascript" src="/static/js/jquery.min.js"></script>
+        <script type="text/javascript" src="/static/js/uikit.min.js"></script>
+        <script type="text/javascript" src="/static/js/sticky.min.js"></script>
+        <script type="text/javascript" src="/static/js/notify.min.js"></script>
+        <script type="text/javascript" src="/static/js/autocomplete.min.js"></script>
+        <script type="text/javascript" src="/static/js/datepicker.min.js"></script>
+        <script type="text/javascript" src="/static/js/accordion.min.js"></script>
+        <script type="text/javascript" src="/static/js/tooltip.min.js"></script>
+            
+        {% block js %}
+        {% endblock js %}
+        
+        <script type="text/javascript" src="/static/js/base.js"></script>
+
+    </body>
+</html>

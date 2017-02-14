@@ -1,0 +1,45 @@
+{% extends 'layout.html' %}
+
+{% block body %}
+<div class="uk-grid">
+    <div class="uk-width-2-10">
+        <ul class="uk-tab uk-tab-left" data-uk-tab="{connect: '#tab-helper', animation: 'fade', swiping: false}">
+            <li class="uk-active"><a href="#">Journal Parser</a></li>
+        </ul>
+    </div>
+    <div class="uk-width-8-10">
+        <ul id="tab-helper" class="uk-switcher uk-margin">
+            <li>
+                <div id="helper-journal-parser">
+                    <div class="uk-alert uk-alert-large">
+                        <h3>Journal Parser</h3>
+                        <p>Please upload your system.journal file, and the decoded journal file will be downloaded automatically.
+                           <br>Attention: Do not add Chinese in file name.
+                        </p>
+                    </div>
+                    <form action="/helper/" method="post" enctype="multipart/form-data" target="journal-iframe" class="uk-form">
+                        <input type="text" id="journal-path" disabled class="uk-width-3-10" placeholder="File Path">
+                        <input type="file" name="journal-files" id="journal-files" onchange="$('#journal-path').val(this.value)" style="display: none;">
+                        <button type="button" class="uk-button uk-button-primary" onclick="$('#journal-files').click()">Browse</button>
+                        <button type="submit" class="uk-button uk-button-primary">Submit</button>
+                        <iframe name="journal-iframe" style="display: none;"></iframe>
+                    </form>
+                </div>
+            </li>
+        </ul>
+    </div>
+</div>
+{% endblock body %}
+
+{% block js %}
+<script type="text/javascript">
+function showError() {
+    UIkit.notify({
+        message: 'Upload file failed, please try again later...',
+        status: 'danger',
+        timeout: 5000,
+        pos: 'top-center'
+    });
+}
+</script>
+{% endblock js %}

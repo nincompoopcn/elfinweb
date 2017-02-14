@@ -1,0 +1,75 @@
+<div class="uk-grid">
+    <div class="uk-width-6-10 uk-container-center"> 
+        <form class="uk-form">
+            <input type="text" class="uk-width-6-10" placeholder="Add New Team">
+            <button type="submit" class="uk-button uk-button-primary">Submit</button>
+        </form>
+    </div>
+</div>
+<hr class="uk-grid-divider">
+<div class="uk-grid">
+    <div class="uk-width-6-10 uk-container-center">
+        <div class="uk-overflow-container">
+            <table id="table-team" class="uk-table uk-table-hover uk-table-striped">
+                <thead>
+                    <th style="width:20%">Name</th>
+                    <th style="width:70%">Description</th>
+                    <th style="width:10%">Op</th>
+                </thead>
+                <tbody>
+                    {% for team in teams %}
+                    <tr data-t_id="{{ team.t_id }}">
+                        <td>{{ team.t_name }}</td>
+                        <td>{{ team.description }}</td>
+                        <td>
+                            <a href="#" class="uk-icon-small uk-icon-hover uk-icon-info"></a>
+                            <a href="#" class="uk-icon-small uk-icon-hover uk-icon-remove"></a>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<div id="modal-team" class="uk-modal">
+    <div class="uk-modal-dialog">
+        <form id="form-team" class="uk-form uk-form-horizontal">
+            <div class="uk-form-row">
+                <label class="uk-form-label" for="form-team-name">Name:</label>
+                <div class="uk-form-controls">
+                    <input type="text" id="form-team-name" class="uk-width-1-1" placeholder="Name">
+                </div>
+            </div>
+            <div class="uk-form-row">
+                <label class="uk-form-label" for="form-team-pr_name">PR Name:</label>
+                <div class="uk-form-controls">
+                    <input type="text" id="form-team-pr_name" class="uk-width-1-1" placeholder="PR Name">
+                </div>
+            </div>
+            <div class="uk-form-row">
+                <label class="uk-form-label" for="form-team-date">Date:</label>
+                <div class="uk-form-controls">
+                    <input type="text" data-uk-datepicker="{format:'YYYY-MM-DD'}" id="form-team-date" class="uk-width-1-1" placeholder="Date">
+                </div>
+            </div>
+            <div class="uk-form-row">
+                <label class="uk-form-label" for="form-team-number">Number:</label>
+                <div class="uk-form-controls">
+                    <input type="text" id="form-team-number" class="uk-width-1-1" placeholder="Number">
+                </div>
+            </div>
+            <div class="uk-form-row">
+                <label class="uk-form-label" for="form-team-description">Description:</label>
+                <div class="uk-form-controls">
+                    <input type="text" id="form-team-description" class="uk-width-1-1" placeholder="Description">
+                </div>
+            </div>
+        </form>
+        <div class="uk-modal-footer uk-text-right">
+            <button class="uk-button uk-modal-close">Cancel</button>
+            <button id="form-team-submit" class="uk-button uk-button-primary">Submit</button>
+        </div>
+    </div>
+</div>

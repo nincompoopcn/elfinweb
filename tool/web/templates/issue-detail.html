@@ -1,0 +1,173 @@
+<div id="modal-detail" class="uk-modal">
+    <div class="uk-modal-dialog uk-modal-dialog-large">
+        <form id="form-detail" class="uk-form uk-form-horizontal">
+            <div class="uk-form-row">
+                <label class="uk-form-label" for="form-detail-category">Problem Category:</label>
+                <div class="uk-form-controls">
+                    <select id="form-detail-category" class="uk-width-1-1">
+                        <option value="0">Select Problem Category</option>
+                        {% for category in categories %}
+                        <option value="{{ category.c_id }}">{{ category.c_name }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+            </div>
+            <div class="uk-form-row">
+                <label class="uk-form-label" for="form-detail-pronto">Pronto ID:</label>
+                <div class="uk-form-controls">
+                    <input type="text" id="form-detail-pronto" class="uk-width-1-1" placeholder="Pronto ID">
+                </div>
+            </div>
+            <div class="uk-form-row">
+                <label class="uk-form-label" for="form-detail-monsho">Monsho ID:</label>
+                <div class="uk-form-controls">
+                    <input type="text" id="form-detail-monsho" class="uk-width-1-1" placeholder="Monsho ID">
+                </div>
+            </div>
+            <div class="uk-form-row">
+                <label class="uk-form-label" for="form-detail-title">Problem Title:</label>
+                <div class="uk-form-controls">
+                    <input type="text" id="form-detail-title" class="uk-width-1-1" placeholder="Problem Title">
+                </div>
+            </div>
+            <div class="uk-form-row">
+                <label class="uk-form-label" for="form-detail-person">Responsible Person:</label>
+                <div class="uk-form-controls">
+                    <div class="uk-width-1-1 uk-autocomplete uk-form auto-person">
+                        <input type="text" id="form-detail-person" class="uk-width-1-1" placeholder="Responsible Person">
+                    </div>
+                </div>
+            </div>
+            <div class="uk-form-row">
+                <label class="uk-form-label" for="form-detail-release">Release:</label>
+                <div class="uk-form-controls">
+                    <select id="form-detail-release" class="uk-width-1-1">
+                        <option value="0">Select Problem Release</option>
+                        {% for release in releases %}
+                        <option value="{{ release.r_id }}">{{ release.r_name }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+            </div>
+            <div class="uk-form-row">
+                <label class="uk-form-label" for="form-detail-in">In Date:</label>
+                <div class="uk-form-controls">
+                    <input type="text" data-uk-datepicker="{format:'YYYY-MM-DD'}" id="form-detail-in" class="uk-width-1-1" placeholder="In Date">
+                </div>
+            </div>
+            <div class="uk-form-row">
+                <label class="uk-form-label" for="form-detail-out">Out Date:</label>
+                <div class="uk-form-controls">
+                    <input type="text" data-uk-datepicker="{format:'YYYY-MM-DD'}" id="form-detail-out" class="uk-width-1-1" placeholder="Out Date">
+                </div>
+            </div>
+            <div class="uk-form-row">
+                <label class="uk-form-label" for="form-detail-state">State:</label>
+                <div class="uk-form-controls">
+                    <select id="form-detail-state" class="uk-width-1-1">
+                        <option value="0">Select State</option>
+                        {% for state in states %}
+                        <option value="{{ state.s_id }}">{{ state.s_name }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+            </div>
+            <div class="uk-form-row">
+                <label class="uk-form-label" for="form-detail-note">Note</label>
+                <div class="uk-form-controls">
+                    <textarea id="form-detail-note" class="uk-width-1-1" rows="3" placeholder="Note"></textarea>
+                </div>
+            </div>
+            <div class="uk-form-row">
+                <label class="uk-form-label" for="form-detail-team">Team:</label>
+                <div class="uk-form-controls">
+                    <select id="form-detail-team" class="uk-width-1-1">
+                        <option value="0">Select Team</option>
+                        {% for team in teams %}
+                        <option value="{{ team.t_id }}">{{ team.t_name }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+            </div>
+            <div class="uk-form-row">
+                <label class="uk-form-label" for="form-detail-group">Pronto Group:</label>
+                <div class="uk-form-controls">
+                    <select id="form-detail-group" class="uk-width-1-1">
+                        <option value="0">Select Pronto Group</option>
+                        {% for group in groups %}
+                        <option value="{{ group.g_id }}">{{ group.g_name }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+            </div>
+            <div class="uk-form-row">
+                <label class="uk-form-label" for="form-detail-area">Area:</label>
+                <div class="uk-form-controls">
+                    <select id="form-detail-area" class="uk-width-1-1">
+                        <option value="0">Select Area In Above Group</option>
+                        {% for area in areas %}
+                        <option value="{{ area.a_id }}" parent="{{ area.g_id }}">{{ area.a_name }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+            </div>
+            <div class="uk-form-row">
+                <label class="uk-form-label" for="form-detail-fault">Fault Found:</label>
+                <div class="uk-form-controls">
+                    <select id="form-detail-fault" class="uk-width-1-1">
+                        <option value="0">Select Fault Found</option>
+                        {% for fault in faults %}
+                        <option value="{{ fault.f_id }}">{{ fault.f_name }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+            </div>
+            <div class="uk-form-row">
+                <label class="uk-form-label" for="form-detail-ongoing">Ongoing Days:</label>
+                <div class="uk-form-controls">
+                    <input type="number" id="form-detail-ongoing" class="uk-width-1-1" placeholder="Ongoing Days">
+                </div>
+            </div>
+            <div class="uk-form-row">
+                <label class="uk-form-label" for="form-detail-blocked">Blocked Days:</label>
+                <div class="uk-form-controls">
+                    <input type="number" id="form-detail-blocked" class="uk-width-1-1" placeholder="Blocked Days">
+                </div>
+            </div>
+            <div class="uk-form-row">
+                <label class="uk-form-label" for="form-detail-rcfound">RCFound Days:</label>
+                <div class="uk-form-controls">
+                    <input type="number" id="form-detail-rcfound" class="uk-width-1-1" placeholder="RCFound Days">
+                </div>
+            </div>
+            <div class="uk-form-row">
+                <label class="uk-form-label" for="form-detail-knife">Knife Number:</label>
+                <div class="uk-form-controls">
+                    <input type="text" id="form-detail-knife" class="uk-width-1-1" placeholder="Knife Number">
+                </div>
+            </div>
+            <div class="uk-form-row">
+                <label class="uk-form-label" for="form-detail-rft">In -> RFT:</label>
+                <div class="uk-form-controls">
+                    <input type="text" data-uk-datepicker="{format:'YYYY-MM-DD'}" id="form-detail-rft" class="uk-width-1-1" placeholder="In -> RFT">
+                </div>
+            </div>
+            <div class="uk-form-row">
+                <label class="uk-form-label" for="form-detail-fcc">RFT -> FCC:</label>
+                <div class="uk-form-controls">
+                    <input type="text" data-uk-datepicker="{format:'YYYY-MM-DD'}" id="form-detail-fcc" class="uk-width-1-1" placeholder="RFT -> FCC">
+                </div>
+            </div>
+            <div class="uk-form-row">
+                <label class="uk-form-label" for="form-detail-closed">FCC -> Closed:</label>
+                <div class="uk-form-controls">
+                    <input type="text" data-uk-datepicker="{format:'YYYY-MM-DD'}" id="form-detail-closed" class="uk-width-1-1" placeholder="FCC -> Closed">
+                </div>
+            </div>
+        </form>
+        <div class="uk-modal-footer uk-text-right">
+            <button class="uk-button uk-modal-close">Cancel</button>
+            <button id="form-detail-submit" class="uk-button uk-button-primary">Submit</button>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,429 @@
+{% extends 'layout.html' %}
+
+{% block css %}
+<link rel="stylesheet" href="/static/css/bootstrap-base.min.css">
+<link rel="stylesheet" href="/static/css/bootstrap-select.min.css">
+
+<style>
+.bootstrap-select {
+    white-space: nowrap;
+}
+</style>
+{% endblock css %}
+
+{% block body %}
+    <div class="uk-grid">
+        <div class="uk-width-1-1"> 
+            <ul class="uk-tab" data-uk-tab="{connect: '#tab-fault', animation: 'fade', swiping: false}">
+                <li class="uk-active"><a href="#">Issues List</a></li>
+                <li><a href="#">Raise New Issue</a></li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="uk-grid">
+        <div class="uk-width-1-1"> 
+            <ul id="tab-fault" class="uk-switcher uk-margin">
+                <li>{% include 'issue-list.html' %}</li>
+                <li>{% include 'issue-raise.html' %}</li>
+            </ul>
+        </div>
+    </div>
+
+    {% include 'issue-detail.html' %}
+{% endblock body %}
+
+{% block js %}
+<script type="text/javascript" src="/static/js/bootstrap-base.min.js"></script>
+<script type="text/javascript" src="/static/js/bootstrap-select.min.js"></script>
+<script type="text/javascript">
+    $('.selectpicker').selectpicker({
+        iconBase: '',
+        tickIcon: 'uk-icon-check'
+    }); 
+
+    $(document).ready(function() {
+        $('#form-area').children('option[value!="0"]').each(function() { 
+            $(this).wrap('<span style="display:none;"></span>');
+        }); 
+        $('#form-detail-area').children('option[value!="0"]').each(function() { 
+            $(this).wrap('<span style="display:none;"></span>');
+        }); 
+
+        $('.auto-person').each(function() {
+            UIkit.autocomplete($(this), {
+                source: function(release) {
+                    var p_id = escape(this.value);
+                    var items = [];
+
+                    $.ajax({
+                        type: 'GET',
+                        url: '/third/person/?query=' + p_id,
+                        success: function(data, textStatus) {
+                            var persons = JSON.parse(data)['users'];
+                            persons.forEach(function(item) {
+                                item['value'] = item['fullname'];
+                                items.push(item);
+                            });
+                            release(items);
+                        }
+                    });
+                }
+            });
+        });
+    });
+
+    $('table .uk-icon-info').on('click', function(e) {
+        e.preventDefault();
+        $('#form-detail')[0].reset();
+        
+        var tr = $(this).parent().parent();
+        var i_id = tr.data('i_id');
+        $.ajax({
+            type: 'GET',
+            url: '/issue/' + i_id,
+            success: function(data, textStatus) {
+                var issue = JSON.parse(data);
+                
+                $('#form-detail-area').children('span').each(function() { 
+                    $(this).children().clone().replaceAll($(this));
+                }); 
+                $('#form-detail-area').children('option[parent!="' + issue['g_id'] + '"][value!="0"]').each(function() { 
+                    $(this).wrap('<span style="display:none;"></span>');
+                }); 
+
+                $('#form-detail').data('i_id', i_id);
+                $('#form-detail-category').val(issue['c_id']);
+                $('#form-detail-pronto').val(issue['pronto']);
+                $('#form-detail-monsho').val(issue['monsho']);
+                $('#form-detail-title').val(issue['title']);
+                $('#form-detail-person').val(issue['person']);
+                $('#form-detail-release').val(issue['r_id']);
+                $('#form-detail-in').val(issue['in_date']);
+                $('#form-detail-out').val(issue['out_date']);
+                $('#form-detail-state').val(issue['s_id']);
+                $('#form-detail-note').val(issue['note']);
+                $('#form-detail-team').val(issue['t_id']);
+                $('#form-detail-group').val(issue['g_id']?issue['g_id']:0);
+                $('#form-detail-area').val(issue['a_id']?issue['a_id']:0);
+                $('#form-detail-fault').val(issue['f_id']?issue['f_id']:0);
+                $('#form-detail-ongoing').val(issue['ongoing_days']);
+                $('#form-detail-blocked').val(issue['blocked_days']);
+                $('#form-detail-rcfound').val(issue['rcfound_days']);
+                $('#form-detail-knife').val(issue['knife']);
+                $('#form-detail-rft').val(issue['in_rft_day']);
+                $('#form-detail-fcc').val(issue['rft_fcc_day']);
+                $('#form-detail-closed').val(issue['fcc_closed_day']);
+
+                var modal = UIkit.modal('#modal-detail');
+                modal.show();
+            },
+            error: function() {
+                UIkit.notify({
+                    message: 'Get issue failed, please try again later...',
+                    status: 'danger',
+                    timeout: 5000,
+                    pos: 'top-center'
+                });
+            }
+        });
+    });
+
+    $('table .uk-icon-remove').on('click', function(e){
+        e.preventDefault();
+        var tr = $(this).parent().parent();
+        var i_id = tr.data('i_id');
+        var title = tr.children().eq(3).text()
+        UIkit.modal.confirm('Please confirm if delete "' + title + '" ?', function(){
+            $.ajax({
+                type: 'DELETE',
+                url: '/issue/' + i_id,
+                success: function() {
+                    var url = window.location.href;
+                    window.location.href = url;
+                },
+                error: function(xhr, textStatus) {
+                    if (xhr.status == 401) {
+                        UIkit.notify({
+                            message: 'No privilege, please sign in or ask for administrator...',
+                            status: 'danger',
+                            timeout: 5000,
+                            pos: 'top-center'
+                        });
+                    } else {
+                        UIkit.notify({
+                            message: 'Delete issue failed, please try again later...',
+                            status: 'danger',
+                            timeout: 5000,
+                            pos: 'top-center'
+                        });
+                    }
+                }
+            });
+        });
+    });
+    
+    $('.uk-pagination a').on('click', function(e) {
+        e.preventDefault();
+        var page = $(this).data('page');
+        var url = replaceParamVal('page', page);
+        window.location.href = url;
+    });
+
+    $('#form-sync').on('click', function() {
+        var re = /^PR\d{6}$/;
+        var pr_id = $(this).parent().children('input').eq(0).val();
+        if (re.test(pr_id)) {
+            var modal = UIkit.modal.blockUI('Collecting pronto information... <div class="uk-modal-spinner"></div>');
+            $.ajax({
+                type: 'GET',
+                url: '/third/pronto/' + pr_id,
+                success: function(data, textStatus) {
+                    modal.hide();
+                    var pronto = JSON.parse(data);
+                    $('#form-title').val(pronto['title']);
+                    $('#form-person').val(pronto['person']);
+                    $('#form-monsho').val(pronto['monsho']);
+                    $('#form-release').children('option:contains("' + pronto['release'] + '")').attr("selected",true);
+                    $('#form-state').children('option:contains("' + pronto['state'] + '")').attr("selected",true);
+                    $('#form-group').children('option:contains("' + pronto['group'] + '")').attr("selected",true);
+                    $('#form-group').trigger('change');
+                },
+                error: function(xhr, textStatus) {
+                    modal.hide();
+                    UIkit.notify({
+                        message: 'Get pronto failed, please try again later...',
+                        status: 'danger',
+                        timeout: 5000,
+                        pos: 'top-center'
+                    });
+                }
+            });
+        } else {
+            UIkit.notify({
+                message: 'Pronto ID not valid, please try again later...',
+                status: 'danger',
+                timeout: 5000,
+                pos: 'top-center'
+            });
+        }
+    });
+
+    $('#form-mine').on('click', function() {
+        var modal = UIkit.modal.blockUI('Collecting your name... <div class="uk-modal-spinner"></div>');
+        $.ajax({
+            type: 'GET',
+            url: '/third/person/?is_mine=1',
+            success: function(data, textStatus) {
+                modal.hide();
+                var persons = JSON.parse(data)['users'];
+                if (persons.length > 0) {
+                    $('#form-person').val(persons[0]['fullname']);
+                }
+            },
+            error: function(xhr, textStatus) {
+                modal.hide();
+                UIkit.notify({
+                    message: 'Your name may not be recorded, please try again later...',
+                    status: 'danger',
+                    timeout: 5000,
+                    pos: 'top-center'
+                });
+            }
+        });
+    });
+
+    $('#form-group').on('change', function() {
+        $('#form-area').children("span").each(function(){ 
+            $(this).children().clone().replaceAll($(this));
+        }); 
+        $('#form-area').children('option[parent!="' + $(this).val() + '"][value!="0"]').each(function() { 
+            $(this).wrap('<span style="display:none;"></span>');
+        }); 
+    });
+
+    $('#form-detail-group').on('change', function() {
+        $('#form-detail-area').children("span").each(function(){ 
+            $(this).children().clone().replaceAll($(this));
+        }); 
+        $('#form-detail-area').children('option[parent!="' + $(this).val() + '"][value!="0"]').each(function() { 
+            $(this).wrap('<span style="display:none;"></span>');
+        }); 
+    });
+
+    $('#form-submit').on('click', function(e) {
+        e.preventDefault();
+        var isError = false;
+        if (validateFormError($('#form-category'), '0')) {
+            isError = true;
+        }
+        if (validateFormError($('#form-title'), '')) {
+            isError = true;
+        }
+        if (validateFormError($('#form-person'), '')) {
+            isError = true;
+        }
+        if (validateFormError($('#form-release'), '0')) {
+            isError = true;
+        }
+        if (validateFormError($('#form-in'), '')) {
+            isError = true;
+        }
+        if (validateFormError($('#form-state'), '0')) {
+            isError = true;
+        }
+        if (validateFormError($('#form-team'), '0')) {
+            isError = true;
+        }
+        if (validateFormError($('#form-group'), '0')) {
+            isError = true;
+        }
+        if (isError) {
+            UIkit.notify({
+                message: 'Form validation error, please check your issue again...',
+                status: 'danger',
+                timeout: 5000,
+                pos: 'top-center'
+            });
+            return;
+        }
+
+        $.ajax({
+            type: 'POST',
+            url: '/issue/',
+            data: {
+                'category': $('#form-category').val(),
+                'pronto': $('#form-pronto').val(),
+                'monsho': $('#form-monsho').val(),
+                'title': $('#form-title').val(),
+                'person': $('#form-person').val(),
+                'release': $('#form-release').val(),
+                'in': $('#form-in').val(),
+                'out': $('#form-out').val(),
+                'state': $('#form-state').val(),
+                'note': $('#form-note').val(),
+                'team': $('#form-team').val(),
+                'group': $('#form-group').val(),
+                'area': $('#form-area').val(),
+                'fault': $('#form-fault').val(),
+                'ongoing': $('#form-ongoing').val(),
+                'blocked': $('#form-blocked').val(),
+                'rcfound': $('#form-rcfound').val(),
+                'knife': $('#form-knife').val(),
+                'rft': $('#form-rft').val(),
+                'fcc': $('#form-fcc').val(),
+                'closed': $('#form-closed').val()
+            },
+            success: function() {
+                var url = replaceParamVal('page', 1);
+                window.location.href = url;
+            },
+            error: function(xhr, textStatus) {
+                if (xhr.status == 401) {
+                    UIkit.notify({
+                        message: 'No privilege, please sign in or ask for administrator...',
+                        status: 'danger',
+                        timeout: 5000,
+                        pos: 'top-center'
+                    });
+                } else {
+                    UIkit.notify({
+                        message: 'Raise new issue failed, please try again later...',
+                        status: 'danger',
+                        timeout: 5000,
+                        pos: 'top-center'
+                    });
+                }
+            }
+        });
+    });
+
+    $('#form-detail-submit').on('click', function(e) {
+        e.preventDefault();
+        isError = false;
+        if (validateFormError($('#form-detail-category'), '0')) {
+            isError = true;
+        }
+        if (validateFormError($('#form-detail-title'), '')) {
+            isError = true;
+        }
+        if (validateFormError($('#form-detail-person'), '')) {
+            isError = true;
+        }
+        if (validateFormError($('#form-detail-release'), '0')) {
+            isError = true;
+        }
+        if (validateFormError($('#form-detail-in'), '')) {
+            isError = true;
+        }
+        if (validateFormError($('#form-detail-state'), '0')) {
+            isError = true;
+        }
+        if (validateFormError($('#form-detail-team'), '0')) {
+            isError = true;
+        }
+        if (validateFormError($('#form-detail-group'), '0')) {
+            isError = true;
+        }
+        if (isError) {
+            UIkit.notify({
+                message: 'Form validation error, please check your issue again...',
+                status: 'danger',
+                timeout: 5000,
+                pos: 'top-center'
+            });
+            return;
+        }
+
+        i_id = $('#form-detail').data('i_id');
+        $.ajax({
+            type: 'PUT',
+            url: '/issue/' + i_id,
+            data: {
+                'category': $('#form-detail-category').val(),
+                'pronto': $('#form-detail-pronto').val(),
+                'monsho': $('#form-detail-monsho').val(),
+                'title': $('#form-detail-title').val(),
+                'person': $('#form-detail-person').val(),
+                'release': $('#form-detail-release').val(),
+                'in': $('#form-detail-in').val(),
+                'out': $('#form-detail-out').val(),
+                'state': $('#form-detail-state').val(),
+                'note': $('#form-detail-note').val(),
+                'team': $('#form-detail-team').val(),
+                'group': $('#form-detail-group').val(),
+                'area': $('#form-detail-area').val(),
+                'fault': $('#form-detail-fault').val(),
+                'ongoing': $('#form-detail-ongoing').val(),
+                'blocked': $('#form-detail-blocked').val(),
+                'rcfound': $('#form-detail-rcfound').val(),
+                'knife': $('#form-detail-knife').val(),
+                'rft': $('#form-detail-rft').val(),
+                'fcc': $('#form-detail-fcc').val(),
+                'closed': $('#form-detail-closed').val()
+            },
+            success: function() {
+                var url = window.location.href;
+                window.location.href = url;
+            },
+            error: function(xhr, textStatus) {
+                if (xhr.status == 401) {
+                    UIkit.notify({
+                        message: 'No privilege, please sign in or ask for administrator...',
+                        status: 'danger',
+                        timeout: 5000,
+                        pos: 'top-center'
+                    });
+                } else {
+                    UIkit.notify({
+                        message: 'Update issue failed, please try again later...',
+                        status: 'danger',
+                        timeout: 5000,
+                        pos: 'top-center'
+                    });
+                }
+            }
+        });
+    });
+</script>
+{% endblock js %}

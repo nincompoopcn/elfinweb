@@ -1,0 +1,197 @@
+<div class="uk-grid">
+    <div class="uk-width-6-10 uk-container-center">
+        {% if session.UID %}
+        <div class="uk-alert uk-alert-success" data-uk-alert>
+            <a href="#" class="uk-alert-close uk-close"></a>
+            <p>You are signed in, new issue can be autocompleted if Pronto ID given...</p>
+        </div>
+        {% else %}
+        <div class="uk-alert uk-alert-danger" data-uk-alert>
+            <a href="#" class="uk-alert-close uk-close"></a>
+            <p>You are not signed in, new issue can not be raised...</p>
+        </div>
+        {% endif %}
+        <form class="uk-form uk-form-horizontal">
+            <div class="uk-form-row">
+                <label class="uk-form-label" for="form-category">Problem Category:</label>
+                <div class="uk-form-controls">
+                    <select id="form-category" class="uk-width-1-1">
+                        <option value="0">Select Problem Category</option>
+                        {% for category in categories %}
+                        <option value="{{ category.c_id }}">{{ category.c_name }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+            </div>
+            <div class="uk-form-row">
+                <label class="uk-form-label" for="form-pronto">Pronto ID:</label>
+                <div class="uk-form-controls">
+                    {% if session.UID %}
+                    <div class="uk-form-icon uk-right uk-width-1-1">
+                        <a id="form-sync" class="uk-icon-magnet uk-icon-hover" data-uk-tooltip="{pos:'right'}" title="Auto completion if Pronto ID given"></a>
+                        <input type="text" id="form-pronto" class="uk-width-1-1" placeholder="Pronto ID">
+                    </div>
+                    {% else %}
+                    <input type="text" id="form-pronto" class="uk-width-1-1" placeholder="Pronto ID">
+                    {% endif %}
+                </div>
+            </div>
+            <div class="uk-form-row">
+                <label class="uk-form-label" for="form-monsho">Monsho ID:</label>
+                <div class="uk-form-controls">
+                    <input type="text" id="form-monsho" class="uk-width-1-1" placeholder="Monsho ID">
+                </div>
+            </div>
+            <div class="uk-form-row">
+                <label class="uk-form-label" for="form-title">Problem Title:</label>
+                <div class="uk-form-controls">
+                    <input type="text" id="form-title" class="uk-width-1-1" placeholder="Problem Title">
+                </div>
+            </div>
+            <div class="uk-form-row">
+                <label class="uk-form-label" for="form-person">Responsible Person:</label>
+                <div class="uk-form-controls">
+                    {% if session.UID %}
+                    <div class="uk-form-icon uk-right uk-width-1-1 uk-autocomplete uk-form auto-person">
+                        <a id="form-mine" class="uk-icon-tag uk-icon-hover" data-uk-tooltip="{pos:'right'}" title="Set name if signed in"></a>
+                        <input type="text" id="form-person" class="uk-width-1-1" placeholder="Responsible Person">
+                    </div>
+                    {% else %}
+                    <input type="text" id="form-person" class="uk-width-1-1" placeholder="Responsible Person">
+                    {% endif %}
+                </div>
+            </div>
+            <div class="uk-form-row">
+                <label class="uk-form-label" for="form-release">Release:</label>
+                <div class="uk-form-controls">
+                    <select id="form-release" class="uk-width-1-1">
+                        <option value="0">Select Problem Release</option>
+                        {% for release in releases %}
+                        <option value="{{ release.r_id }}">{{ release.r_name }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+            </div>
+            <div class="uk-form-row">
+                <label class="uk-form-label" for="form-in">In Date:</label>
+                <div class="uk-form-controls">
+                    <input type="text" data-uk-datepicker="{format:'YYYY-MM-DD'}" id="form-in" class="uk-width-1-1" placeholder="In Date">
+                </div>
+            </div>
+            <div class="uk-form-row">
+                <label class="uk-form-label" for="form-out">Out Date:</label>
+                <div class="uk-form-controls">
+                    <input type="text" data-uk-datepicker="{format:'YYYY-MM-DD'}" id="form-out" class="uk-width-1-1" placeholder="Out Date">
+                </div>
+            </div>
+            <div class="uk-form-row">
+                <label class="uk-form-label" for="form-state">State:</label>
+                <div class="uk-form-controls">
+                    <select id="form-state" class="uk-width-1-1">
+                        <option value="0">Select State</option>
+                        {% for state in states %}
+                        <option value="{{ state.s_id }}">{{ state.s_name }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+            </div>
+            <div class="uk-form-row">
+                <label class="uk-form-label" for="form-note">Note</label>
+                <div class="uk-form-controls">
+                    <textarea id="form-note" class="uk-width-1-1" rows="3" placeholder="Note"></textarea>
+                </div>
+            </div>
+            <div class="uk-form-row">
+                <label class="uk-form-label" for="form-team">Team:</label>
+                <div class="uk-form-controls">
+                    <select id="form-team" class="uk-width-1-1">
+                        <option value="0">Select Team</option>
+                        {% for team in teams %}
+                        <option value="{{ team.t_id }}">{{ team.t_name }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+            </div>
+            <div class="uk-form-row">
+                <label class="uk-form-label" for="form-group">Pronto Group:</label>
+                <div class="uk-form-controls">
+                    <select id="form-group" class="uk-width-1-1">
+                        <option value="0">Select Pronto Group</option>
+                        {% for group in groups %}
+                        <option value="{{ group.g_id }}">{{ group.g_name }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+            </div>
+            <div class="uk-form-row">
+                <label class="uk-form-label" for="form-area">Area:</label>
+                <div class="uk-form-controls">
+                    <select id="form-area" class="uk-width-1-1">
+                        <option value="0">Select Area In Above Group</option>
+                        {% for area in areas %}
+                        <option value="{{ area.a_id }}" parent="{{ area.g_id }}">{{ area.a_name }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+            </div>
+            <div class="uk-form-row">
+                <label class="uk-form-label" for="form-fault">Fault Found:</label>
+                <div class="uk-form-controls">
+                    <select id="form-fault" class="uk-width-1-1">
+                        <option value="0">Select Fault Found</option>
+                        {% for fault in faults %}
+                        <option value="{{ fault.f_id }}">{{ fault.f_name }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+            </div>
+            <div class="uk-form-row">
+                <label class="uk-form-label" for="form-ongoing">Ongoing Days:</label>
+                <div class="uk-form-controls">
+                    <input type="number" id="form-ongoing" class="uk-width-1-1" placeholder="Ongoing Days">
+                </div>
+            </div>
+            <div class="uk-form-row">
+                <label class="uk-form-label" for="form-blocked">Blocked Days:</label>
+                <div class="uk-form-controls">
+                    <input type="number" id="form-blocked" class="uk-width-1-1" placeholder="Blocked Days">
+                </div>
+            </div>
+            <div class="uk-form-row">
+                <label class="uk-form-label" for="form-rcfound">RCFound Days:</label>
+                <div class="uk-form-controls">
+                    <input type="number" id="form-rcfound" class="uk-width-1-1" placeholder="RCFound Days">
+                </div>
+            </div>
+            <div class="uk-form-row">
+                <label class="uk-form-label" for="form-knife">Knife Number:</label>
+                <div class="uk-form-controls">
+                    <input type="text" id="form-knife" class="uk-width-1-1" placeholder="Knife Number">
+                </div>
+            </div>
+            <div class="uk-form-row">
+                <label class="uk-form-label" for="form-rft">In -> RFT:</label>
+                <div class="uk-form-controls">
+                    <input type="text" data-uk-datepicker="{format:'YYYY-MM-DD'}" id="form-rft" class="uk-width-1-1" placeholder="In -> RFT">
+                </div>
+            </div>
+            <div class="uk-form-row">
+                <label class="uk-form-label" for="form-fcc">RFT -> FCC:</label>
+                <div class="uk-form-controls">
+                    <input type="text" data-uk-datepicker="{format:'YYYY-MM-DD'}" id="form-fcc" class="uk-width-1-1" placeholder="RFT -> FCC">
+                </div>
+            </div>
+            <div class="uk-form-row">
+                <label class="uk-form-label" for="form-closed">FCC -> Closed:</label>
+                <div class="uk-form-controls">
+                    <input type="text" data-uk-datepicker="{format:'YYYY-MM-DD'}" id="form-closed" class="uk-width-1-1" placeholder="FCC -> Closed">
+                </div>
+            </div>
+            <div class="uk-form-row">
+                <div class="uk-form-controls">
+                    <button id="form-submit" class="uk-button uk-button-primary">Submit</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>

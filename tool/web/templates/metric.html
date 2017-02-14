@@ -1,0 +1,201 @@
+{% extends 'layout.html' %}
+
+{% block body %}
+<div class="uk-grid">
+    <div class="uk-width-2-10">
+        <ul class="uk-tab uk-tab-left" data-uk-tab="{connect: '#tab-metric', animation: 'fade', swiping: false}">
+            <li class="uk-active"><a href="#">New + Inv PR</a></li>
+            <li><a href="#">Resoved PR</a></li>
+            <li><a href="#">Daily Resoved</a></li>
+            <li><a href="#">Rolling Average</a></li>
+            <li><a href="#">Productivity</a></li>
+            <li><a href="#">Cycle Time</a></li>
+        </ul>
+    </div>
+    <div class="uk-width-8-10">
+        <ul id="tab-metric" class="uk-switcher uk-margin">
+            <li>
+                <div>
+                    <form class="uk-form uk-form-horizontal from-chart" data-m_id="1">
+                        <div class="uk-form-row">
+                            <label class="uk-form-label" for="form-pronto">Filter:</label>
+                            <div class="uk-form-controls uk-form-controls-text">
+                                {% for category in categories %}
+                                    <label><input type="checkbox" name="{{ category.c_name }}" {% if category.c_name == "Pronto" %} checked {% endif %}> {{ category.c_name }}</label>
+                                {% endfor %}
+                            </div>
+                        </div>
+                    </form>
+                    <hr class="uk-grid-divider">
+                    <div id="metric-chart-1"></div>
+                </div>
+            </li>
+            <li>
+                <div>
+                    <form class="uk-form uk-form-horizontal from-chart" data-m_id="2">
+                        <div class="uk-form-row">
+                            <label class="uk-form-label" for="form-pronto">Filter:</label>
+                            <div class="uk-form-controls uk-form-controls-text">
+                                {% for category in categories %}
+                                    <label><input type="checkbox" name="{{ category.c_name }}" {% if category.c_name == "Pronto" %} checked {% endif %}> {{ category.c_name }}</label>
+                                {% endfor %}
+                            </div>
+                        </div>
+                        <div class="uk-form-row">
+                            <label class="uk-form-label" for="form-pronto">Duration:</label>
+                            <div class="uk-form-controls uk-form-controls-text">
+                                <input type="text" name="from_date" data-uk-datepicker="{format:'YYYY-MM-DD'}" class="uk-width-1-4" placeholder="From Date">
+                                <input type="text" name="to_date" data-uk-datepicker="{format:'YYYY-MM-DD'}" class="uk-width-1-4" placeholder="To Date">
+                            </div>
+                        </div>
+                    </form>
+                    <hr class="uk-grid-divider">
+                    <div id="metric-chart-2"></div>
+                </div>
+            </li>
+            <li>
+                <div>
+                    <form class="uk-form uk-form-horizontal from-chart" data-m_id="3">
+                        <div class="uk-form-row">
+                            <label class="uk-form-label" for="form-pronto">Filter:</label>
+                            <div class="uk-form-controls uk-form-controls-text">
+                                {% for category in categories %}
+                                    <label><input type="checkbox" name="{{ category.c_name }}" {% if category.c_name == "Pronto" %} checked {% endif %}> {{ category.c_name }}</label>
+                                {% endfor %}
+                            </div>
+                        </div>
+                        <div class="uk-form-row">
+                            <label class="uk-form-label" for="form-pronto">Duration:</label>
+                            <div class="uk-form-controls uk-form-controls-text">
+                                <input type="text" name="from_date" data-uk-datepicker="{format:'YYYY-MM-DD'}" class="uk-width-1-4" placeholder="From Date">
+                                <input type="text" name="to_date" data-uk-datepicker="{format:'YYYY-MM-DD'}" class="uk-width-1-4" placeholder="To Date">
+                            </div>
+                        </div>
+                    </form>
+                    <hr class="uk-grid-divider">
+                 <div id="metric-chart-3"></div>
+                 </div>
+            </li>
+            <li>
+                <div>
+                    <form class="uk-form uk-form-horizontal from-chart" data-m_id="4">
+                        <div class="uk-form-row">
+                            <label class="uk-form-label" for="form-pronto">Filter:</label>
+                            <div class="uk-form-controls uk-form-controls-text">
+                                {% for category in categories %}
+                                    <label><input type="checkbox" name="{{ category.c_name }}" {% if category.c_name == "Pronto" %} checked {% endif %}> {{ category.c_name }}</label>
+                                {% endfor %}
+                            </div>
+                        </div>
+                        <div class="uk-form-row">
+                            <label class="uk-form-label" for="form-pronto">Select the last week:</label>
+                            <div class="uk-form-controls uk-form-controls-text">
+                                <input type="text" name="to_date" data-uk-datepicker="{format:'YYYY-MM-DD'}" class="uk-width-1-4" placeholder="To Date">
+                            </div>
+                        </div>
+                    </form>
+                    <hr class="uk-grid-divider">
+                    <div id="metric-chart-4"></div>
+                </div>
+            </li>
+            <li>
+                <div>
+                    <form class="uk-form uk-form-horizontal from-chart" data-m_id="5">
+                        <div class="uk-form-row">
+                            <label class="uk-form-label" for="form-pronto">Filter:</label>
+                            <div class="uk-form-controls uk-form-controls-text">
+                                {% for category in categories %}
+                                    <label><input type="checkbox" name="{{ category.c_name }}" {% if category.c_name == "Pronto" %} checked {% endif %}> {{ category.c_name }}</label>
+                                {% endfor %}
+                            </div>
+                        </div>
+                        <div class="uk-form-row">
+                            <label class="uk-form-label" for="form-pronto">Select the last week:</label>
+                            <div class="uk-form-controls uk-form-controls-text">
+                                <input type="text" name="to_date" data-uk-datepicker="{format:'YYYY-MM-DD'}" class="uk-width-1-4" placeholder="To Date">
+                            </div>
+                        </div>
+                    </form>
+                    <hr class="uk-grid-divider">
+                    <div id="metric-chart-5"></div>
+                </div>
+            </li>
+            <li>
+                <div>
+                    <form class="uk-form uk-form-horizontal from-chart" data-m_id="6">
+                        <div class="uk-form-row">
+                            <label class="uk-form-label" for="form-pronto">Filter:</label>
+                            <div class="uk-form-controls uk-form-controls-text">
+                                {% for category in categories %}
+                                    <label><input type="checkbox" name="{{ category.c_name }}" {% if category.c_name == "Pronto" %} checked {% endif %}> {{ category.c_name }}</label>
+                                {% endfor %}
+                            </div>
+                        </div>
+                        <div class="uk-form-row">
+                            <label class="uk-form-label" for="form-pronto">Select the last week:</label>
+                            <div class="uk-form-controls uk-form-controls-text">
+                                <input type="text" name="to_date" data-uk-datepicker="{format:'YYYY-MM-DD'}" class="uk-width-1-4" placeholder="To Date">
+                            </div>
+                        </div>
+                    </form>
+                    <hr class="uk-grid-divider">
+                    <div id="metric-chart-6"></div>
+                </div>
+            </li>
+        </ul>
+    </div>
+</div>
+{% endblock body %}
+
+{% block js %}
+<script type="text/javascript" src="/static/js/plotly.min.js"></script>
+
+<script type="text/javascript">
+    function getChartByAjax(m_id, param) {
+        $.ajax({
+            type: 'GET',
+            url: '/metric/' + m_id + '?' + param,
+            success: function(data, textStatus) {
+                var plot = JSON.parse(data)
+                plot['layout']['width'] = '1000';
+                plot['layout']['height'] = '600';
+                plot['layout']['font'] = {
+                    'family': '"Proxima Nova", "Helvetica Neue", Helvetica, Arial, sans-serif'
+                };
+                Plotly.newPlot(
+                    'metric-chart-' + m_id,
+                    plot['data'],
+                    plot['layout'], {
+                        showLink: false,
+                        displaylogo: false,
+                        displayModeBar: false
+                    }
+                );
+            },
+            error: function(xhr, textStatus) {
+                UIkit.notify({
+                    message: 'Get chart ' + m_id + ' failed, please try again later...',
+                    status: 'danger',
+                    timeout: 5000,
+                    pos: 'top-center'
+                });
+            }
+        });
+    }
+
+    $(document).ready(function() {
+        getChartByAjax(1, ['Pronto']);
+        getChartByAjax(2, ['Pronto']);
+        getChartByAjax(3, ['Pronto']);
+        getChartByAjax(4, ['Pronto']);
+        getChartByAjax(5, ['Pronto']);
+        getChartByAjax(6, ['Pronto']);
+    });
+
+    $('.from-chart').on('change', function() {
+        var m_id = $(this).data('m_id');
+        var param = $(this).serialize()
+        getChartByAjax(m_id, param);
+    });
+</script>
+{% endblock js %}

@@ -1,0 +1,25 @@
+<ul class="uk-pagination">
+    {% if pagination.active > 3 %}
+    <li><a href="#" data-page="1">1</a></li>
+    <li><span>...</span></li>
+    {% endif %}
+
+    {% for page in range(pagination.active - 2, pagination.active) %}
+    {% if page > 0 %}
+    <li><a href="#" data-page="{{ page }}">{{ page }}</a></li>
+    {% endif %}
+    {% endfor %}
+    
+    <li class="uk-active"><span>{{ pagination.active }}</span></li>
+
+    {% for page in range(pagination.active + 1, pagination.active + 3) %}
+    {% if page < pagination.count %}
+    <li><a href="#" data-page="{{ page }}">{{ page }}</a></li>
+    {% endif %}
+    {% endfor %}
+
+    {% if pagination.active < pagination.count - 2 %}
+    <li><span>...</span></li>
+    <li><a href="#" data-page="{{ pagination.count }}">{{ pagination.count }}</a></li>
+    {% endif %}
+</ul>

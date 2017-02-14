@@ -1,0 +1,362 @@
+{% extends 'layout.html' %}
+
+{% block body %}
+    <div class="uk-grid">
+        <div class="uk-width-1-1"> 
+            <ul class="uk-tab" data-uk-tab="{connect:'#tab-admin'}">
+                <li class="uk-active"><a href="#">Team</a></li>
+                <li><a href="#">Fault</a></li>
+                {% if g.privilege > 1 %}
+                <li><a href="#">Privilege</a></li>
+                {% endif %}
+            </ul>
+        </div>
+    </div>
+
+    <div class="uk-grid">
+        <div class="uk-width-1-1"> 
+            <ul id="tab-admin" class="uk-switcher uk-margin">
+                <li>{% include 'admin/admin-team.html' %}</li>
+                <li>{% include 'admin/admin-fault.html' %}</li>
+                {% if g.privilege > 1 %}
+                <li>{% include 'admin/admin-privilege.html' %}</li>
+                {% endif %}
+            </ul>
+        </div>
+    </div>
+{% endblock body %}
+
+{% block js %}
+<script type="text/javascript">
+/********** team block start **********/
+    function refreshTeamTable() {
+        $.ajax({
+            type: 'GET',
+            url: '/group/?ps=1',
+            success: function(data, textStatus) {
+                var groups = JSON.parse(data);
+                $("#table-team tbody tr").remove();
+                for (var i = 0; i < groups.length; i++) {
+                    var group = groups[i];
+                    var newRow = '<tr data-t_id="' + group.t_id + '">' +
+                    '<td>' + group.t_name + '</td>' +
+                    '<td>' + group.description + '</td>' +
+                    '<td>' +
+                        '<a href="#" class="uk-icon-small uk-icon-hover uk-icon-info"></a> ' +
+                        '<a href="#" class="uk-icon-small uk-icon-hover uk-icon-remove"></a>' +
+                    '</td></tr>';
+                    $("#table-team tbody").append(newRow);
+                }
+            }
+        });
+    }
+
+    $('#table-team').on('click', '.uk-icon-info', function(e) {
+        e.preventDefault();
+        $('#form-team')[0].reset();
+        
+        var tr = $(this).parent().parent();
+        var t_id = tr.data('t_id');
+        $.ajax({
+            type: 'GET',
+            url: '/group/' + t_id,
+            success: function(data, textStatus) {
+                var group = JSON.parse(data);
+
+                $('#form-team').data('t_id', t_id);
+                $('#form-team-name').val(group['t_name']);
+                $('#form-team-pr_name').val(group['pr_name']);
+                $('#form-team-date').val(getToday());
+                $('#form-team-number').val(group['number']);
+                $('#form-team-description').val(group['description']);
+
+                var modal = UIkit.modal('#modal-team');
+                modal.show();
+            },
+            error: function() {
+                UIkit.notify({
+                    message: 'Get group failed, please try again later...',
+                    status: 'danger',
+                    timeout: 5000,
+                    pos: 'top-center'
+                });
+            }
+        });
+    });
+
+    $('#form-team-submit').on('click', function(e) {
+        e.preventDefault();
+        var isError = false;
+        if (validateFormError($('#form-team-name'), '')) {
+            isError = true;
+        }
+        if (isError) {
+            UIkit.notify({
+                message: 'Form validation error, please check your team again...',
+                status: 'danger',
+                timeout: 5000,
+                pos: 'top-center'
+            });
+            return;
+        }
+
+        t_id = $('#form-team').data('t_id');
+        $.ajax({
+            type: 'PUT',
+            url: '/group/' + t_id,
+            data: {
+                't_name': $('#form-team-name').val(),
+                'pr_name': $('#form-team-pr_name').val(),
+                'date': $('#form-team-date').val(),
+                'number': $('#form-team-number').val(),
+                'description': $('#form-team-description').val(),
+            },
+            success: function() {
+                refreshTeamTable();
+                var modal = UIkit.modal('#modal-team');
+                modal.hide();
+            },
+            error: function() {
+                UIkit.notify({
+                    message: 'Update team failed, please try again later...',
+                    status: 'danger',
+                    timeout: 5000,
+                    pos: 'top-center'
+                });
+            }
+        });
+    });
+/********** team block end **********/
+/********** privilege block start **********/
+    function refreshPrivilegeTable() {
+        $.ajax({
+            type: 'GET',
+            url: '/privilege/',
+            success: function(data, textStatus) {
+                var privileges = JSON.parse(data);
+                $("#table-privilege tbody tr").remove();
+                for (var i = 0; i < privileges.length; i++) {
+                    var privilege = privileges[i];
+                    var newRow = '<tr data-u_id="' + privilege.u_id + '">' +
+                    '<td>' + privilege.u_id + '</td>' +
+                    '<td>' + privilege.level + '</td>' +
+                    '<td>' +
+                        '<a href="#" class="uk-icon-small uk-icon-hover uk-icon-remove"></a>' +
+                    '</td></tr>';
+                    $("#table-privilege tbody").append(newRow);
+                }
+            }
+        });
+    }
+
+    $('#privilege-add-submit').on('click', function(e) {
+        e.preventDefault();
+        var isError = false;
+        if (validateFormError($('#privilege-add-name'), '')) {
+            isError = true;
+        }
+        if (isError) {
+            UIkit.notify({
+                message: 'Form validation error, please check your privilege again...',
+                status: 'danger',
+                timeout: 5000,
+                pos: 'top-center'
+            });
+            return;
+        }
+
+        $.ajax({
+            type: 'POST',
+            url: '/privilege/',
+            data: {
+                'u_id': $('#privilege-add-user').val()
+            },
+            success: function() {
+                refreshPrivilegeTable();
+            },
+            error: function() {
+                UIkit.notify({
+                    message: 'Add privilege failed, please try again later...',
+                    status: 'danger',
+                    timeout: 5000,
+                    pos: 'top-center'
+                });
+            }
+        });
+    });
+
+    $('#table-privilege').on('click', '.uk-icon-remove', function(e) {
+        e.preventDefault();
+        
+        var tr = $(this).parent().parent();
+        var u_id = tr.data('u_id');
+        $.ajax({
+            type: 'DELETE',
+            url: '/privilege/' + u_id,
+            success: function() {
+                refreshPrivilegeTable();
+            },
+            error: function() {
+                UIkit.notify({
+                    message: 'Delete privilege failed, please try again later...',
+                    status: 'danger',
+                    timeout: 5000,
+                    pos: 'top-center'
+                });
+            }
+        });
+    });
+/********** privilege block end **********/
+/********** fault block start **********/
+    function refreshFaultTable() {
+        $.ajax({
+            type: 'GET',
+            url: '/fault/',
+            success: function(data, textStatus) {
+                var faults = JSON.parse(data);
+                $("#table-fault tbody tr").remove();
+                for (var i = 0; i < faults.length; i++) {
+                    var fault = faults[i];
+                    var newRow = '<tr data-f_id="' + fault.f_id + '">' +
+                    '<td>' + fault.f_name + '</td>' +
+                    '<td>' + fault.description + '</td>' +
+                    '<td>' +
+                        '<a href="#" class="uk-icon-small uk-icon-hover uk-icon-info"></a> ' +
+                        '<a href="#" class="uk-icon-small uk-icon-hover uk-icon-remove"></a>' +
+                    '</td></tr>';
+                    $("#table-fault tbody").append(newRow);
+                }
+            }
+        });
+    }
+
+    $('#fault-add-submit').on('click', function(e) {
+        e.preventDefault();
+        var isError = false;
+        if (validateFormError($('#fault-add-name'), '')) {
+            isError = true;
+        }
+        if (isError) {
+            UIkit.notify({
+                message: 'Form validation error, please check your fault again...',
+                status: 'danger',
+                timeout: 5000,
+                pos: 'top-center'
+            });
+            return;
+        }
+
+        $.ajax({
+            type: 'POST',
+            url: '/fault/',
+            data: {
+                'f_name': $('#fault-add-name').val()
+            },
+            success: function(data, textStatus) {
+                refreshFaultTable();
+            },
+            error: function() {
+                UIkit.notify({
+                    message: 'Add fault failed, please try again later...',
+                    status: 'danger',
+                    timeout: 5000,
+                    pos: 'top-center'
+                });
+            }
+        });
+    });
+
+    $('#table-fault').on('click', '.uk-icon-info', function(e) {
+        e.preventDefault();
+        $('#form-fault')[0].reset();
+        
+        var tr = $(this).parent().parent();
+        var f_id = tr.data('f_id');
+        $.ajax({
+            type: 'GET',
+            url: '/fault/' + f_id,
+            success: function(data, textStatus) {
+                var fault = JSON.parse(data);
+
+                $('#form-fault').data('f_id', f_id);
+                $('#form-fault-name').val(fault['f_name']);
+                $('#form-fault-description').val(fault['description']);
+
+                var modal = UIkit.modal('#modal-fault');
+                modal.show();
+            },
+            error: function() {
+                UIkit.notify({
+                    message: 'Get fault failed, please try again later...',
+                    status: 'danger',
+                    timeout: 5000,
+                    pos: 'top-center'
+                });
+            }
+        });
+    });
+
+    $('#table-fault').on('click', '.uk-icon-remove', function(e) {
+        e.preventDefault();
+        
+        var tr = $(this).parent().parent();
+        var f_id = tr.data('f_id');
+        $.ajax({
+            type: 'DELETE',
+            url: '/fault/' + f_id,
+            success: function(data, textStatus) {
+                refreshFaultTable();
+            },
+            error: function() {
+                UIkit.notify({
+                    message: 'Delete fault failed, please try again later...',
+                    status: 'danger',
+                    timeout: 5000,
+                    pos: 'top-center'
+                });
+            }
+        });
+    });
+
+    $('#form-fault-submit').on('click', function(e) {
+        e.preventDefault();
+        var isError = false;
+        if (validateFormError($('#form-fault-name'), '')) {
+            isError = true;
+        }
+        if (isError) {
+            UIkit.notify({
+                message: 'Form validation error, please check your fault again...',
+                status: 'danger',
+                timeout: 5000,
+                pos: 'top-center'
+            });
+            return;
+        }
+
+        f_id = $('#form-fault').data('f_id');
+        $.ajax({
+            type: 'PUT',
+            url: '/fault/' + f_id,
+            data: {
+                'f_name': $('#form-fault-name').val(),
+                'description': $('#form-fault-description').val(),
+            },
+            success: function() {
+                refreshFaultTable();
+                var modal = UIkit.modal('#modal-fault');
+                modal.hide();
+            },
+            error: function() {
+                UIkit.notify({
+                    message: 'Update fault failed, please try again later...',
+                    status: 'danger',
+                    timeout: 5000,
+                    pos: 'top-center'
+                });
+            }
+        });
+    });
+/********** fault block end **********/
+</script>
+{% endblock js %}
